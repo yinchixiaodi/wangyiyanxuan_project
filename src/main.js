@@ -1,8 +1,25 @@
-import Vue from 'vue'
-import App from './App.vue'
+import Vue from "vue";
+import App from "./App.vue";
 
-Vue.config.productionTip = false
+import "lib-flexible/flexible";
+import BScroll from "@better-scroll/core";
+import router from "./router";
+import store from "./store";
+import "swiper/swiper-bundle.css";
+import { Button, Col, Row, Icon, Field, Tab, Tabs, Search } from "vant";
+Vue.use(Button)
+  .use(Col)
+  .use(Row)
+  .use(Icon)
+  .use(Field)
+  .use(Tab)
+  .use(Tabs)
+  .use(Search);
+
+Vue.config.productionTip = false;
 
 new Vue({
-  render: h => h(App),
-}).$mount('#app')
+  render: (h) => h(App),
+  router,
+  store,
+}).$mount("#app");
