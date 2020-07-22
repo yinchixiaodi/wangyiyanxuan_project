@@ -4,7 +4,7 @@ import WorthBuy from "@/pages/WorthBuy";
 import Cart from "@/pages/Cart";
 import Personal from "@/pages/Personal";
 import Search from "@/components/Search/Search";
-
+import Login from "@/pages/Login";
 export default [
   {
     path: "/",
@@ -29,5 +29,10 @@ export default [
   {
     path: "/search",
     component: Search,
+  },
+  {
+    path: "/login",
+    component: Login,
+    children: [],
   },
 ];

@@ -14,20 +14,23 @@
         <div class="navContent"> -->
       <!-- active 当前选中的标识符 -->
       <van-tabs active="">
-        <van-tab class="navItem" title="推荐">内容 0</van-tab>
+        <van-tab class="navItem" title="推荐" @click="changeNavId(0)">
+          <Recommend v-if="navId === 0"></Recommend>
+        </van-tab>
         <van-tab
           :title="navItem.text"
           class="navItem"
           v-for="(navItem, index) in indexData.kingKongModule.kingKongList"
           :key="index"
-          >内容 1</van-tab
+          @click="changeNavId(navItem.L1Id)"
         >
+          <HomeCate v-if="navId !== 1" :navId="navId"></HomeCate>
+        </van-tab>
       </van-tabs>
       <!-- </div>
       </div> -->
     </div>
     <!-- 轮播图 -->
-    <Recommend></Recommend>
   </div>
 </template>
 
@@ -35,8 +38,14 @@
 import { mapState, mapActions } from "vuex";
 import BScroll from "@better-scroll/core";
 import Recommend from "@/components/Recommend/Recommend";
+import HomeCate from "@/components/HomeCate/HomeCate";
 export default {
   name: "Home",
+  data() {
+    return {
+      navId: 0,
+    };
+  },
   mounted() {
     this.getIndexData();
     // 实现首页导航的横向滑动
@@ -71,6 +80,10 @@ export default {
     toSearch() {
       this.$router.push("/search");
     },
+    // 点击导航切换显示
+    changeNavId(navId) {
+      this.navId = navId;
+    },
   },
   computed: {
     ...mapState({
@@ -79,6 +92,7 @@ export default {
   },
   components: {
     Recommend,
+    HomeCate,
   },
 };
 </script>
