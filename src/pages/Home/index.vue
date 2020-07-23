@@ -13,8 +13,8 @@
       <!-- <div class="content" ref="contentWrap">
         <div class="navContent"> -->
       <!-- active 当前选中的标识符 -->
-      <van-tabs active="">
-        <van-tab class="navItem" title="推荐" @click="changeNavId(0)">
+      <van-tabs v-model="navId">
+        <van-tab class="navItem" title="推荐" @click="changeNavId(0)" :name="0">
           <Recommend v-if="navId === 0"></Recommend>
         </van-tab>
         <van-tab
@@ -22,9 +22,10 @@
           class="navItem"
           v-for="(navItem, index) in indexData.kingKongModule.kingKongList"
           :key="index"
+          :name="navItem.L1Id"
           @click="changeNavId(navItem.L1Id)"
         >
-          <HomeCate v-if="navId !== 1" :navId="navId"></HomeCate>
+          <HomeCate v-if="navId != 0" :navId="navId"></HomeCate>
         </van-tab>
       </van-tabs>
       <!-- </div>
@@ -82,6 +83,7 @@ export default {
     },
     // 点击导航切换显示
     changeNavId(navId) {
+      console.log("ssss");
       this.navId = navId;
     },
   },

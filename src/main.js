@@ -5,7 +5,7 @@ import "lib-flexible/flexible";
 import BScroll from "@better-scroll/core";
 import router from "./router";
 import store from "./store";
-import "swiper/swiper-bundle.css";
+import "swiper/css/swiper.css";
 import { Button, Col, Row, Icon, Field, Tab, Tabs, Search } from "vant";
 Vue.use(Button)
   .use(Col)

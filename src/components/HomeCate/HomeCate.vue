@@ -32,21 +32,33 @@ export default {
     const cateListData = await reqCateListData();
     console.log(cateListData.data.data);
     this.cateList = cateListData.data.data;
-    new Swiper(".swiper-container", {
-      loop: true,
-      autoplay: true,
-      pagination: {
-        el: ".swiper-pagination",
-      },
+    console.log("xxxx", this.cateList);
+    this.$nextTick(() => {
+      new Swiper(".swiper-container", {
+        // loop: true,
+        // autoplay: true,
+        pagination: {
+          el: ".swiper-pagination",
+        },
+      });
     });
   },
   computed: {
     // 计算要显示的导航下边的内容
     cateObj() {
-      return this.cateList.find(
-        (item) => item.category.parentId === this.navId
+      return (
+        this.cateList.find((item) => {
+          return item.category.parentId === this.navId;
+        }) || {}
       );
     },
+  },
+  watch: {
+    // cateList() {
+    //   this.$nextTick(() => {
+    //     this.cateObj();
+    //   });
+    // },
   },
 };
 </script>

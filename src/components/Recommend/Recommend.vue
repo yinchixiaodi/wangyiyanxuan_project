@@ -77,12 +77,15 @@
         <span>{{ kkItem.text }}</span>
       </div>
     </div>
+    <!-- 分类列表区域 -->
+    <RecommendCategory></RecommendCategory>
   </div>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import Swiper from "swiper";
+import RecommendCategory from "@/components/RecommendCategory/RecommendCategory";
 export default {
   name: "Recommend",
   computed: {
@@ -99,6 +102,9 @@ export default {
         el: ".swiper-pagination",
       },
     });
+  },
+  components: {
+    RecommendCategory,
   },
 };
 </script>
@@ -118,7 +124,7 @@ export default {
         width 100%
         height 100%
         img
-          width 100%
+          width 750px
           height 100%
   .policyDescList
     display flex

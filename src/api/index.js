@@ -9,3 +9,8 @@ export function reqCateListData() {
 export function reqCateIndexData() {
   return axios("/api/getCategoryDatas");
 }
+
+// 获取值得买页面nav数据
+export function getWorthBuyNavData() {
+  return axios.get("/topic/v1/know/navWap.json");
+}

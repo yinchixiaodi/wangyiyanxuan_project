@@ -53,6 +53,7 @@ html,body,#app{
     height 98px
     display flex
     align-items center
+    background #fff
     .navItem
       width 20%
       text-align center

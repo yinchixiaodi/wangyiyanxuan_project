@@ -36,7 +36,7 @@ export default {
     toCart() {
       this.$router.replace("/cart");
     },
-    // 点击改变现实的内容
+    // 点击改变显示的内容
     changeIsLogin(isLogin) {
       this.isLogin = isLogin;
     },
