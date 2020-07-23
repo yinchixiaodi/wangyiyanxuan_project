@@ -1,5 +1,6 @@
 <template>
   <div class="homeCateContainer">
+    <!-- 轮播图 -->
     <div class="swiper-container">
       <div class="swiper-wrapper" v-if="cateObj.category">
         <div
@@ -12,6 +13,30 @@
       </div>
       <!-- 如果需要分页器 -->
       <div class="swiper-pagination"></div>
+    </div>
+    <!-- title -->
+    <div class="title">
+      <div class="titleTop">口碑好物</div>
+      <div class="titleBottom">口碑好物</div>
+    </div>
+    <!-- 商品列表 -->
+    <div class="goodsList">
+      <div
+        class="goodItem"
+        v-for="(item, index) in cateObj.itemList"
+        :key="index"
+      >
+        <img :src="item.listPicUrl" alt="" />
+        <div class="goodsDesc">
+          {{ item.simpleDesc }}
+        </div>
+        <div class="goodsName">
+          {{ item.name }}
+        </div>
+        <div class="priceInner">
+          <span class="priceLeft">￥ {{ item.retailPrice }}</span>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -35,8 +60,8 @@ export default {
     console.log("xxxx", this.cateList);
     this.$nextTick(() => {
       new Swiper(".swiper-container", {
-        // loop: true,
-        // autoplay: true,
+        loop: true,
+        autoplay: true,
         pagination: {
           el: ".swiper-pagination",
         },
@@ -65,6 +90,7 @@ export default {
 
 <style lang="stylus" scoped>
 .homeCateContainer
+  width 100%
   .swiper-container
     width 100%
     height 296px
@@ -77,4 +103,52 @@ export default {
         img
           width 100%
           height 100%
+  .title
+    width 100%
+    height 120px
+    div
+      width 100%
+      text-align center
+      line-height 60px
+      &.titleTop
+        font-size 32px
+        color #333
+      &.titleBottom
+        font-size 24px
+        color #999
+  .goodsList
+    width 100%
+    display flex
+    flex-wrap wrap
+    justify-content space-around
+    &::after
+      content ""
+      width 330px
+      height 0
+    .goodItem
+      width 330px
+      display flex
+      flex-direction column
+      align-items flex-start
+      img
+        width 330px
+        height 330px
+      .goodsDesc
+        width 330px
+        height 48px
+        line-height 48px
+        font-size 24px
+        padding 6px 10px
+        box-sizing border-box
+        background #f1ece2
+        overflow hidden
+      .goodsName
+        width 330px
+        height 78px
+        color #333
+        margin-top 16px
+        overflow hidden
+      .priceInner
+        font-size 32px
+        color #dd1a21
 </style>

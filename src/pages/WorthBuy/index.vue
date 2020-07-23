@@ -1,5 +1,5 @@
 <template>
-  <div class="worthbuyContainer">
+  <div class="worthbuyContainer" style="padding-bottom:50px">
     <div class="loginHeader">
       <i class="iconfont icon-shouye shouye" @click="toHome"></i>
       <span>值得买</span>
@@ -21,56 +21,78 @@
         alt=""
       />
     </div>
-    <div class="swiperTab">
+    <div class="swiperTab" ref="scrollWrap">
       <!-- <div class="swiperContainer"> -->
-      <div class="tabItem">
-        <div class="item itemTop">
+      <div class="tabItem" ref="scrollContent" @click="categoryScrollHandle">
+        <!-- <div class="item itemTop">
           <img src="@/assets/images/personal/personal.png" alt="" />
           <div class="tabTitle">9.9超值</div>
           <div class="tabContent">爆品定价直降</div>
+        </div> -->
+        <div
+          class="item itemBottom"
+          v-for="navItem in navData"
+          :key="navItem.id"
+        >
+          <img :src="navItem.picUrl" alt="" />
+          <div class="tabTitle">{{ navItem.mainTitle }}</div>
+          <div class="tabContent">{{ navItem.viceTitle }}</div>
         </div>
-        <!-- <div class="item itemBottom" v-for="navItem in navData" :key="navItem.id">
-            <img :src="navItem.picUrl" alt="" />
-            <div class="tabTitle">{{navItem.mainTitle}}</div>
-            <div class="tabContent">{{navItem.viceTitle}}</div>
-          </div> -->
       </div>
       <!-- </div> -->
     </div>
     <!-- 商品展示区 -->
-    <div class="goodsShow">
-      <div class="goodsItem">
-        <div class="goodsImg">
-          <img src="@/assets/images/zhidemai/zhidemaibeijing.png" alt="" />
+
+    <waterfall
+      :col="2"
+      :data="oneGoodsInfo"
+      @loadmore="loadmore"
+      @scroll="scroll"
+    >
+      <template>
+        <!-- <div class="goodsShow"> -->
+        <!-- v-for="(goodsList, index) in oneGoodsInfo"
+          :key="index" -->
+        <div
+          class="goodsItem"
+          v-for="goodsItem in oneGoodsInfo"
+          :key="goodsItem.topicId"
+        >
+          <div class="goodsImg">
+            <img :src="goodsItem.picUrl" alt="" />
+          </div>
+          <div class="goodsDesc">
+            {{ goodsItem.title }}
+          </div>
+          <div class="userInfo">
+            <img class="userPic" :src="goodsItem.avatar" alt="" />
+            <span class="username">{{ goodsItem.nickname }}</span>
+            <span class="upText">{{ goodsItem.readCount }}</span>
+          </div>
+          <div class="bottom">
+            <span class="goodsName">菊花金银花枸杞...</span>
+            <span class="buy">去购买 ></span>
+          </div>
         </div>
-        <div class="goodsDesc">
-          三伏天闭囤，好评率99.9%的清火花茶
-        </div>
-        <div class="userInfo">
-          <img
-            class="userPic"
-            src="@/assets/images/personal/personal.png"
-            alt=""
-          />
-          <span class="username">网易云课堂：末末</span>
-          <span class="upText">835</span>
-        </div>
-        <div class="bottom">
-          <span class="goodsName">菊花金银花枸杞...</span>
-          <span class="buy">去购买 ></span>
-        </div>
-      </div>
-    </div>
+        <!-- </div> -->
+      </template>
+    </waterfall>
   </div>
 </template>
 
 <script>
-import { getWorthBuyNavData } from "@/api";
+import { getWorthBuyNavData, reqOneGoodsInfo } from "@/api";
+import BScroll from "better-scroll";
 export default {
   name: "WorthBuy",
   data() {
     return {
+      col: 2,
       navData: [],
+      oneGoodsInfo: [],
+      page: 1,
+      size: 5,
+      isbottom: false,
     };
   },
   async mounted() {
@@ -78,8 +100,50 @@ export default {
     const result = await getWorthBuyNavData();
     // console.log(result);
     this.navData = result.data.data.navList;
+    this.$nextTick(() => {
+      this.categoryScrollHandle();
+    });
+    this.getOneGoodsInfo(1, 5);
+    this.$nextTick(() => {
+      this.$waterfall.forceUpdate();
+    });
   },
   methods: {
+    // 请求获取值得买页面第一屏数据
+    async getOneGoodsInfo(page, size) {
+      const result = await reqOneGoodsInfo(page, size);
+      if (result.data.data.result.length <= 0) {
+        this.isbottom = true;
+      }
+      let gooslist = result.data.data.result;
+      gooslist.forEach((item) => {
+        this.oneGoodsInfo = this.oneGoodsInfo.concat(item.topics);
+      });
+      console.log(this.oneGoodsInfo);
+    },
+    //
+    categoryScrollHandle() {
+      this.bs = new BScroll(this.$refs.scrollWrap, {
+        mouseWheel: true,
+        disableTouch: false,
+        disableMouse: false,
+        resizePolling: 0,
+        click: true, //开启点击事件
+        scrollX: true,
+        probeType: 3,
+      });
+    },
+    heightScrollHandle() {
+      this.hbs = new BScroll(this.$refs.hscrollWrap, {
+        mouseWheel: true,
+        disableTouch: false,
+        disableMouse: false,
+        resizePolling: 0,
+        click: true, //开启点击事件
+        scrollY: true,
+        probeType: 3,
+      });
+    },
     // 点击跳转到首页
     toHome() {
       this.$router.replace("/");
@@ -92,14 +156,28 @@ export default {
     toCart() {
       this.$router.replace("/cart");
     },
+    // 触底触发
+    loadmore() {
+      console.log("触底触发 loadmore()");
+      //滚动到底部触发
+      if (this.isbottom) {
+        return false;
+      }
+      let page = this.page;
+      this.page += 1;
+      this.getOneGoodsInfo(page + 1, this.size);
+    },
+    scroll(e) {
+      console.log("滚动", e);
+    },
   },
 };
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
 .worthbuyContainer
   width 100%
-  height 100%
+  /* height 100% */
   background-color #eee
   .loginHeader
     width 100%
@@ -149,8 +227,13 @@ export default {
     background-color #fff
     border-radius 10px
     margin 0 auto
+    display flex
+    white-space nowrap
+    overflow hidden
     .tabItem
-      overflow hidden
+      /* overflow hidden */
+      display flex
+      /* flex-wrap wrap */
       .item
         width 168px
         height 200px
@@ -158,7 +241,6 @@ export default {
         flex-direction column
         align-items center
         margin 28px 6px 0 6px
-
         img
           width 120px
           height 120px
@@ -177,6 +259,13 @@ export default {
     left:0
     top:-350px
     width 100%
+    display flex
+    flex-wrap wrap
+    justify-content space-around
+    &::after
+      content ""
+      width 345px
+      height 0
     .goodsItem
       width 345px
       height 630px
@@ -206,6 +295,7 @@ export default {
           width 48px
           height 48px
           border-radius 50%
+          margin-right 20px
         .username
           font-size 24px
           margin-right 8px

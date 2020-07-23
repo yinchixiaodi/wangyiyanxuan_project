@@ -7,6 +7,8 @@ import router from "./router";
 import store from "./store";
 import "swiper/css/swiper.css";
 import { Button, Col, Row, Icon, Field, Tab, Tabs, Search } from "vant";
+import waterfall from "vue-waterfall2";
+Vue.use(waterfall);
 Vue.use(Button)
   .use(Col)
   .use(Row)
