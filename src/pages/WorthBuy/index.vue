@@ -21,14 +21,17 @@
         alt=""
       />
     </div>
-    <div class="swiperTab" ref="scrollWrap">
-      <!-- <div class="swiperContainer"> -->
+    <!-- <div class="swiperTab" ref="scrollWrap">
       <div class="tabItem" ref="scrollContent" @click="categoryScrollHandle">
-        <!-- <div class="item itemTop">
+        <div class="item itemTop">
           <img src="@/assets/images/personal/personal.png" alt="" />
           <div class="tabTitle">9.9超值</div>
           <div class="tabContent">爆品定价直降</div>
-        </div> -->
+        </div>
+      </div>
+    </div> -->
+    <div class="swiper-container swiperTab">
+      <div class="swiper-wrapper tabItem">
         <div
           class="item itemBottom"
           v-for="navItem in navData"
@@ -38,11 +41,10 @@
           <div class="tabTitle">{{ navItem.mainTitle }}</div>
           <div class="tabContent">{{ navItem.viceTitle }}</div>
         </div>
+        <div class="swiper-scrollbar"></div>
       </div>
-      <!-- </div> -->
     </div>
     <!-- 商品展示区 -->
-
     <waterfall
       :col="2"
       :data="oneGoodsInfo"
@@ -50,31 +52,32 @@
       @scroll="scroll"
     >
       <template>
-        <!-- <div class="goodsShow"> -->
-        <!-- v-for="(goodsList, index) in oneGoodsInfo"
-          :key="index" -->
         <div
-          class="goodsItem"
+          class="goodsShow"
           v-for="goodsItem in oneGoodsInfo"
           :key="goodsItem.topicId"
         >
-          <div class="goodsImg">
-            <img :src="goodsItem.picUrl" alt="" />
-          </div>
-          <div class="goodsDesc">
-            {{ goodsItem.title }}
-          </div>
-          <div class="userInfo">
-            <img class="userPic" :src="goodsItem.avatar" alt="" />
-            <span class="username">{{ goodsItem.nickname }}</span>
-            <span class="upText">{{ goodsItem.readCount }}</span>
-          </div>
-          <div class="bottom">
-            <span class="goodsName">菊花金银花枸杞...</span>
-            <span class="buy">去购买 ></span>
+          <!-- v-for="(goodsList, index) in oneGoodsInfo"
+          :key="index" -->
+          <div class="goodsItem">
+            <!-- v-for="goodsItem in oneGoodsInfo" :key="goodsItem.topicId" -->
+            <div class="goodsImg">
+              <img :src="goodsItem.picUrl" alt="" />
+            </div>
+            <div class="goodsDesc">
+              {{ goodsItem.title }}
+            </div>
+            <div class="userInfo">
+              <img class="userPic" :src="goodsItem.avatar" alt="" />
+              <span class="username">{{ goodsItem.nickname }}</span>
+              <span class="upText">{{ goodsItem.readCount }}</span>
+            </div>
+            <div class="bottom">
+              <span class="goodsName">菊花金银花枸杞...</span>
+              <span class="buy">去购买 ></span>
+            </div>
           </div>
         </div>
-        <!-- </div> -->
       </template>
     </waterfall>
   </div>
@@ -83,6 +86,7 @@
 <script>
 import { getWorthBuyNavData, reqOneGoodsInfo } from "@/api";
 import BScroll from "better-scroll";
+import Swiper from "swiper";
 export default {
   name: "WorthBuy",
   data() {
@@ -100,12 +104,20 @@ export default {
     const result = await getWorthBuyNavData();
     // console.log(result);
     this.navData = result.data.data.navList;
-    this.$nextTick(() => {
-      this.categoryScrollHandle();
-    });
     this.getOneGoodsInfo(1, 5);
     this.$nextTick(() => {
       this.$waterfall.forceUpdate();
+    });
+    // 轮播图
+    new Swiper(".swiper-container", {
+      slidesPerView: 4, // 一行显示的数量
+      slidesPerColumn: 2, //显示2行
+      loop: true,
+      scrollbar: {
+        // 启用滚动条
+        el: ".swiper-scrollbar",
+      },
+      slidesPerGroup: 1,
     });
   },
   methods: {
@@ -119,10 +131,10 @@ export default {
       gooslist.forEach((item) => {
         this.oneGoodsInfo = this.oneGoodsInfo.concat(item.topics);
       });
-      console.log(this.oneGoodsInfo);
+      // console.log(this.oneGoodsInfo);
     },
     //
-    categoryScrollHandle() {
+    /* categoryScrollHandle() {
       this.bs = new BScroll(this.$refs.scrollWrap, {
         mouseWheel: true,
         disableTouch: false,
@@ -143,7 +155,7 @@ export default {
         scrollY: true,
         probeType: 3,
       });
-    },
+    }, */
     // 点击跳转到首页
     toHome() {
       this.$router.replace("/");
@@ -158,7 +170,7 @@ export default {
     },
     // 触底触发
     loadmore() {
-      console.log("触底触发 loadmore()");
+      // console.log("触底触发 loadmore()");
       //滚动到底部触发
       if (this.isbottom) {
         return false;
@@ -168,7 +180,7 @@ export default {
       this.getOneGoodsInfo(page + 1, this.size);
     },
     scroll(e) {
-      console.log("滚动", e);
+      // console.log("滚动", e);
     },
   },
 };

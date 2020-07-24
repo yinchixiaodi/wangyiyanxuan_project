@@ -36,15 +36,15 @@ export default {
 
 <style lang="stylus">
 html,body,#app{
-  height: 100%;
+  /* height: 100%; */
 }
 #app
   position relative
   width 100%
-  height 100%
+  /* height 100% */
   .appContent
     width 100%
-    height 100%
+    /* height 100% */
   .footerNav
     position fixed
     left 0

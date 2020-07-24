@@ -3,7 +3,7 @@
     <div class="search">
       <van-search
         class="searchInput"
-        v-model="keyword"
+        v-model="keywordPrefix"
         placeholder="请输入搜索关键词"
         @input="searchKeywordhandle"
       />
@@ -22,19 +22,32 @@
         </div>
       </div>
     </div>
+    <div class="searchContentList" v-show="isDisplay">
+      <div
+        class="searchContentItem"
+        v-for="(goods, index) in goodsList"
+        :key="index"
+      >
+        <span>{{ goods }}</span>
+        <span class="right">></span>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import throttle from "lodash/throttle";
+import { reqSearchGoods } from "@/api";
 export default {
   name: "Search",
   data() {
     return {
       value: "电风扇",
       keywordList: [],
-      keyword: "",
+      keywordPrefix: "",
+      isDisplay: false,
+      goodsList: [],
     };
   },
   async mounted() {
@@ -51,13 +64,12 @@ export default {
     // 搜索商品
     searchKeywordhandle: throttle(async function() {
       // 发送请求获取搜索，实时更新搜索联想的数据
-      let keyword = this.keyword;
-      const result = await axios({
-        method: "POST",
-        url: "/xhr/search/searchAutoComplete.json",
-        data: { keywordPrefix: keyword },
-      });
-      console.log(result);
+      // url:https://m.you.163.com/xhr/search/searchAutoComplete.json
+      let keywordPrefix = this.keywordPrefix;
+      this.isDisplay = true;
+      const result = await reqSearchGoods(keywordPrefix);
+      this.goodsList = result.data.data;
+      console.log(this.goodsList);
     }, 500),
   },
 };
@@ -67,6 +79,7 @@ export default {
 .searchContainer
   width 100%
   height 100%
+  position relative
   /* background #eee */
   .search
     width 100%
@@ -94,27 +107,44 @@ export default {
   .content
     width 100%
     .hotSearch
-        width 100%
-        padding 0 30px 30px
-        box-sizing border-box
-        height 90px
-        line-height 90px
-        color #999
-        font-size 28px
+      width 100%
+      padding 0 30px 30px
+      box-sizing border-box
+      height 90px
+      line-height 90px
+      color #999
+      font-size 28px
     .searchList
-        display flex
-        padding 0 30px
-        box-sizing border-box
-        flex-wrap wrap
-        .searchItem
-            height 47px
-            line-height 47px
-            padding 0 15px
-            margin 0 32px 32px 0
-            border 1px solid #333
-            color #333
-            border-radius 5px
-            &.active
-                border 1px solid #DD1A21
-                color #DD1A21
+      display flex
+      padding 0 30px
+      box-sizing border-box
+      flex-wrap wrap
+      .searchItem
+        height 47px
+        line-height 47px
+        padding 0 15px
+        margin 0 32px 32px 0
+        border 1px solid #333
+        color #333
+        border-radius 5px
+        &.active
+          border 1px solid #DD1A21
+          color #DD1A21
+  .searchContentList
+    position absolute
+    left 0
+    top 87px
+    width 100%
+    padding-left 30px
+    background #fff
+    /* display none */
+    .searchContentItem
+      height 104px
+      font-size 28px
+      border-bottom 1px solid #eee
+      line-height 144px
+      display flex
+      justify-content space-between
+      .right
+        margin-right: 40px
 </style>

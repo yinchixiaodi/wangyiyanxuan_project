@@ -5,6 +5,15 @@ export function reqCateListData() {
   return axios("/api/getIndexCateListData");
 }
 
+// 搜索商品
+export function reqSearchGoods(keywordPrefix) {
+  return axios({
+    method: "POST",
+    url: "/xhr/search/searchAutoComplete.json",
+    params: { keywordPrefix },
+  });
+}
+
 // 获取分类页面的数据
 export function reqCateIndexData() {
   return axios("/api/getCategoryDatas");
